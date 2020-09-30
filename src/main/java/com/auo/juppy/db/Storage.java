@@ -3,7 +3,12 @@ package com.auo.juppy.db;
 import com.auo.juppy.result.RunnerResult;
 import com.auo.juppy.runner.RunnerConfig;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
 public interface Storage {
     void saveResult(RunnerResult result);
@@ -30,7 +35,7 @@ public interface Storage {
         //TODO: throw exception if invalid.
     }*/
 
-    public class MemoryStorage implements Storage {
+    class MemoryStorage implements Storage {
 
         Map<UUID, RunnerConfig> runners = new HashMap<>();
         Map<UUID, List<RunnerResult>> results = new HashMap<>();
@@ -38,7 +43,6 @@ public interface Storage {
         @Override
         public void saveResult(RunnerResult result) {
             results.computeIfAbsent(result.runnerId, res -> new ArrayList<>()).add(result);
-            //TODO: write to db
             System.out.println(result);
         }
 
@@ -46,7 +50,7 @@ public interface Storage {
         public void createRunner(RunnerConfig config) {
 
             if (runners.containsKey(config.id)) {
-                //throw exception I suppose.
+                throw new IllegalArgumentException("Can't create a runner with ID: '" + config.id + "'. It already exists");
             }
 
             runners.put(config.id, config);
