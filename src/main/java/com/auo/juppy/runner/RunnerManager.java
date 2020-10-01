@@ -11,7 +11,11 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 public class RunnerManager implements AutoCloseable {
     private final ArrayBlockingQueue<RunnerResult> resultQueue;
@@ -41,8 +45,8 @@ public class RunnerManager implements AutoCloseable {
 
         if (scheduledFuture != null) {
             scheduledFuture.cancel(false);
-            storage.deleteRunner(id);
         }
+        storage.deleteRunner(id);
     }
 
     public RunnerConfig getOne(UUID id) {
@@ -74,8 +78,6 @@ public class RunnerManager implements AutoCloseable {
         }
 
         public void run() {
-            //TODO: Could probably resuse client for multiple requests, I guess?
-            //    HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(uri)
                     .timeout(Duration.ofMillis(timeout))

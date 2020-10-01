@@ -10,7 +10,9 @@ Java uptime monitor.
 ## todo
 * Write to DB (sqlite)
 * Exception handling
+    * 2 kinds of exceptions, internal and external: internal should be logged and then converted to external if it was triggered by a user action, otherwise just logged. 
 * Custom Exceptions
 * Unit testing
 * Create an actual Reporter
 * Better logging
+* Super simple GUI with graphs over results

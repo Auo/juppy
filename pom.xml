@@ -24,6 +24,7 @@
         <javalin.version>3.10.1</javalin.version>
         <logback.version>1.2.3</logback.version>
         <guice.version>4.2.3</guice.version>
+        <junit.version>5.7.0</junit.version>
     </properties>
 
     <dependencies>
@@ -44,6 +45,26 @@
         </dependency>
 
         <!-- jCommander. Not needed at start. -->
+
+        <!-- testing -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
 
         <!-- Logging -->
         <dependency>

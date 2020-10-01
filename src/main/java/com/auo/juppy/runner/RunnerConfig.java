@@ -14,6 +14,6 @@ public class RunnerConfig {
         return "uri: " + uri + "\n" +
                 "timeout: " + timeout + "\n" +
                 "interval: " + interval + "\n" +
-                "id: " + id != null ? id.toString() : "NULL" + "\n\n";
+                "id: " + (id != null ? id.toString() : "NULL") + "\n\n";
     }
 }

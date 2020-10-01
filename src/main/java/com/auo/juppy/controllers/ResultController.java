@@ -1,9 +1,8 @@
 package com.auo.juppy.controllers;
 
 import com.auo.juppy.db.Storage;
+import com.auo.juppy.http.BadRequestException;
 import io.javalin.http.Context;
-
-import java.util.UUID;
 
 public class ResultController {
     private final Storage storage;
@@ -12,8 +11,8 @@ public class ResultController {
         this.storage = storage;
     }
 
-    public void get(Context ctx) {
-        ctx.json(storage.getResult(UUID.fromString(ctx.pathParam("id"))));
+    public void get(Context ctx) throws BadRequestException {
+        ctx.json(storage.getResult(UrlUtil.getIdFromPath(ctx)));
     }
 
 }
