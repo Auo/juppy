@@ -10,5 +10,5 @@ on:
 jobs:
   build:
     steps:
-    - uses: LucaFeger/action-maven-cli@1.1.0
     - name: GitHub Action for Maven
+      uses: LucaFeger/action-maven-cli@1.1.0
