@@ -13,7 +13,7 @@ import java.util.UUID;
 public interface Storage {
     void saveResult(RunnerResult result);
 
-    void createRunner(RunnerConfig config);
+    void createRunner(RunnerConfig config) throws StorageException;
 
     void deleteRunner(UUID id);
 
@@ -47,10 +47,10 @@ public interface Storage {
         }
 
         @Override
-        public void createRunner(RunnerConfig config) {
+        public void createRunner(RunnerConfig config) throws StorageException {
 
             if (runners.containsKey(config.id)) {
-                throw new IllegalArgumentException("Can't create a runner with ID: '" + config.id + "'. It already exists");
+                throw new StorageException("Can't create a runner with ID: '" + config.id + "'. It already exists");
             }
 
             runners.put(config.id, config);

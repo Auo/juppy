@@ -1,6 +1,7 @@
 package com.auo.juppy.runner;
 
 import com.auo.juppy.db.Storage;
+import com.auo.juppy.db.StorageException;
 import com.auo.juppy.result.RunnerResult;
 
 import java.io.IOException;
@@ -28,7 +29,7 @@ public class RunnerManager implements AutoCloseable {
         this.storage = storage;
     }
 
-    public synchronized void create(RunnerConfig config) {
+    public synchronized void create(RunnerConfig config) throws StorageException {
         storage.createRunner(config);
 
         runners.put(config.id, executor.scheduleWithFixedDelay(
@@ -36,8 +37,6 @@ public class RunnerManager implements AutoCloseable {
                 0,
                 config.interval,
                 TimeUnit.MILLISECONDS));
-
-        storage.createRunner(config);
     }
 
     public synchronized void delete(UUID id) {
