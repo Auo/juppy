@@ -95,8 +95,8 @@ public class RunnerManager implements AutoCloseable {
                 HttpResponse<Void> send = client.send(request, HttpResponse.BodyHandlers.discarding());
                 statusCode = send.statusCode();
             } catch (IOException | InterruptedException e) {
-                //TODO: Which response code should it be if it fails?
-                e.printStackTrace();
+                // TODO: Which response code should it be if it fails?
+                // Should this be logged?
             } finally {
                 resultQueue.add(new RunnerResult(statusCode, System.currentTimeMillis() - start, runnerId));
             }
