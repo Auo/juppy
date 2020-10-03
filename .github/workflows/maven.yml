@@ -1,5 +1,5 @@
 
-name: run-maven
+name: maven
 
 on:
   push:
@@ -9,6 +9,9 @@ on:
 
 jobs:
   build:
+    runs-on: ubuntu-latest
     steps:
     - name: GitHub Action for Maven
       uses: LucaFeger/action-maven-cli@1.1.0
+      args:
+        - 'clean install'
