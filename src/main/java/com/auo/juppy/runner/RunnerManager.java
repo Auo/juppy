@@ -3,6 +3,7 @@ package com.auo.juppy.runner;
 import com.auo.juppy.db.Storage;
 import com.auo.juppy.db.StorageException;
 import com.auo.juppy.result.RunnerResult;
+import org.jetbrains.annotations.TestOnly;
 
 import java.io.IOException;
 import java.net.URI;
@@ -63,17 +64,23 @@ public class RunnerManager implements AutoCloseable {
 
 
     public static class ConnectivityRunner implements Runnable {
-        private final HttpClient client = HttpClient.newHttpClient();
+        private final HttpClient client;
         private final URI uri;
         private final long timeout;
         private final ArrayBlockingQueue<RunnerResult> resultQueue;
         private final UUID runnerId;
 
-        public ConnectivityRunner(URI uri, long timeout, ArrayBlockingQueue<RunnerResult> resultQueue, UUID runnerId) {
+        @TestOnly
+        protected ConnectivityRunner(URI uri, long timeout, ArrayBlockingQueue<RunnerResult> resultQueue, UUID runnerId, HttpClient client) {
             this.uri = uri;
             this.timeout = timeout;
             this.resultQueue = resultQueue;
             this.runnerId = runnerId;
+            this.client = client;
+        }
+
+        public ConnectivityRunner(URI uri, long timeout, ArrayBlockingQueue<RunnerResult> resultQueue, UUID runnerId) {
+            this(uri, timeout, resultQueue, runnerId, HttpClient.newHttpClient());
         }
 
         public void run() {
@@ -87,8 +94,8 @@ public class RunnerManager implements AutoCloseable {
             try {
                 HttpResponse<Void> send = client.send(request, HttpResponse.BodyHandlers.discarding());
                 statusCode = send.statusCode();
-
             } catch (IOException | InterruptedException e) {
+                //TODO: Which response code should it be if it fails?
                 e.printStackTrace();
             } finally {
                 resultQueue.add(new RunnerResult(statusCode, System.currentTimeMillis() - start, runnerId));

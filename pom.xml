@@ -32,7 +32,6 @@
 
     <dependencies>
         <!-- flyway db -->
-
         <!-- sqlite driver -->
 
         <dependency>
@@ -47,7 +46,12 @@
             <version>2.10.3</version>
         </dependency>
 
-        <!-- jCommander. Not needed at start. -->
+        <!-- Logging -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
 
         <!-- testing -->
         <dependency>
@@ -69,12 +73,11 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Logging -->
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <version>${logback.version}</version>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>3.1.0</version>
+            <scope>test</scope>
         </dependency>
-
     </dependencies>
 </project>
