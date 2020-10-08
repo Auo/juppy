@@ -5,6 +5,7 @@ import com.auo.juppy.controllers.ResultController;
 import com.auo.juppy.controllers.RunnerController;
 import com.auo.juppy.db.Storage;
 import com.auo.juppy.db.Storage.MemoryStorage;
+import com.auo.juppy.db.StorageException;
 import com.auo.juppy.http.BadRequestException;
 import com.auo.juppy.http.ErrorResponse;
 import com.auo.juppy.result.ResultHandler;
@@ -15,18 +16,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.ArrayBlockingQueue;
 
 public class Service {
     private static final Logger LOGGER = LoggerFactory.getLogger(Service.class);
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws StorageException {
         //Increase log-level for jetty. Otherwise be prepared for spam!
         System.setProperty("org.eclipse.jetty.util.log.class", "org.eclipse.jetty.util.log.StdErrLog");
         System.setProperty("org.eclipse.jetty.LEVEL", "INFO");
 
+        Properties properties = new Properties();
+        properties.setProperty("flyway.url", "jdbc:sqlite:D://temp/DATABASE.db");
 
-        Storage storage = new MemoryStorage();
+        Storage storage = new Storage.SQLiteStorage(properties);
         //TODO: the capacity should probably be larger
         ArrayBlockingQueue<RunnerResult> queue = new ArrayBlockingQueue<>(2);
 

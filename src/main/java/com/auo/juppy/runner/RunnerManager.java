@@ -4,6 +4,8 @@ import com.auo.juppy.db.Storage;
 import com.auo.juppy.db.StorageException;
 import com.auo.juppy.result.RunnerResult;
 import org.jetbrains.annotations.TestOnly;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URI;
@@ -20,24 +22,32 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class RunnerManager implements AutoCloseable {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RunnerManager.class);
+
     private final ArrayBlockingQueue<RunnerResult> resultQueue;
     private final Storage storage;
     private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(2);
     private final ConcurrentHashMap<UUID, ScheduledFuture<?>> runners = new ConcurrentHashMap<>();
 
-    public RunnerManager(ArrayBlockingQueue<RunnerResult> resultQueue, Storage storage) {
+    public RunnerManager(ArrayBlockingQueue<RunnerResult> resultQueue, Storage storage) throws StorageException {
         this.resultQueue = resultQueue;
         this.storage = storage;
+        storage.getAll().forEach(this::startRunner);
     }
 
-    public synchronized void create(RunnerConfig config) throws StorageException {
-        storage.createRunner(config);
 
+    private void startRunner(RunnerConfig config) {
         runners.put(config.id, executor.scheduleWithFixedDelay(
                 new ConnectivityRunner(config.uri, config.timeout, resultQueue, config.id),
                 0,
                 config.interval,
                 TimeUnit.MILLISECONDS));
+    }
+
+    public synchronized void create(RunnerConfig config) {
+        storage.createRunner(config);
+
+        startRunner(config);
     }
 
     public synchronized void delete(UUID id) {
@@ -54,7 +64,7 @@ public class RunnerManager implements AutoCloseable {
     }
 
     public List<RunnerConfig> runners() {
-        return storage.get(runners.keySet());
+        return storage.getAll();
     }
 
     @Override
@@ -95,10 +105,10 @@ public class RunnerManager implements AutoCloseable {
                 HttpResponse<Void> send = client.send(request, HttpResponse.BodyHandlers.discarding());
                 statusCode = send.statusCode();
             } catch (IOException | InterruptedException e) {
+                LOGGER.warn("Failed to ping uri: " + uri.toString(), e);
                 // TODO: Which response code should it be if it fails?
-                // Should this be logged?
             } finally {
-                resultQueue.add(new RunnerResult(statusCode, System.currentTimeMillis() - start, runnerId));
+                resultQueue.add(new RunnerResult(statusCode, System.currentTimeMillis() - start, runnerId, UUID.randomUUID()));
             }
         }
     }

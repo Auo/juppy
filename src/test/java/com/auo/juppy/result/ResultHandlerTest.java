@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Timeout;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
@@ -37,7 +36,7 @@ public class ResultHandlerTest {
     @Test
     public void testStoragePropagation() throws InterruptedException {
         ArrayBlockingQueue<RunnerResult> queue = new ArrayBlockingQueue<>(2);
-        RunnerResult orgResult = new RunnerResult(200, 300, UUID.randomUUID());
+        RunnerResult orgResult = new RunnerResult(200, 300, UUID.randomUUID(), UUID.randomUUID());
         queue.put(orgResult);
         queue.put(ResultHandler.POISON_RECORD);
 
@@ -73,8 +72,8 @@ public class ResultHandlerTest {
         }
 
         @Override
-        public List<RunnerConfig> get(Set<UUID> ids) {
-            return null;
+        public List<RunnerConfig> getAll() {
+            return List.of();
         }
 
         @Override
@@ -84,7 +83,7 @@ public class ResultHandlerTest {
 
         @Override
         public List<RunnerResult> getResult(UUID runnerId) {
-            return null;
+            return List.of();
         }
     }
 }

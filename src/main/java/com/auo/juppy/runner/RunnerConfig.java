@@ -16,4 +16,14 @@ public class RunnerConfig {
                 "interval: " + interval + "\n" +
                 "id: " + (id != null ? id.toString() : "NULL") + "\n\n";
     }
+
+    public static RunnerConfig create(URI uri, long timeout, long interval, UUID id) {
+        RunnerConfig config = new RunnerConfig();
+        config.uri = uri;
+        config.timeout = timeout;
+        config.interval = interval;
+        config.id = id;
+
+        return config;
+    }
 }

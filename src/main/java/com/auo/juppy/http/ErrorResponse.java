@@ -1,7 +1,7 @@
 package com.auo.juppy.http;
 
 public class ErrorResponse {
-    private final String msg;
+    public final String msg;
 
     public ErrorResponse(String msg) {
 

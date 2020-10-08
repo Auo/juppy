@@ -1,14 +1,22 @@
 package com.auo.juppy.result;
 
 import com.auo.juppy.db.Storage;
+import com.auo.juppy.db.StorageException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 
 public class ResultHandler implements AutoCloseable {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ResultHandler.class);
     protected final QueueConsumer consumer;
-    protected static final RunnerResult POISON_RECORD = new RunnerResult(-1, -1, UUID.fromString("69ec27b6-83b8-427d-a8d4-027a31f33a95"));
+    protected static final RunnerResult POISON_RECORD = new RunnerResult(
+            -1,
+            -1,
+            UUID.fromString("69ec27b6-83b8-427d-a8d4-027a31f33a95"),
+            UUID.fromString("cf2b272f-c303-43fd-a40f-4ca134d92601"));
 
     public ResultHandler(ArrayBlockingQueue<RunnerResult> queue, Storage storage, List<Reporter> reporters) {
         this.consumer = new QueueConsumer(queue, storage, reporters);
@@ -49,9 +57,8 @@ public class ResultHandler implements AutoCloseable {
                     if (result.statusCode % 2 != 0) {
                         reporters.forEach(r -> r.notify(result));
                     }
-                } catch (InterruptedException e) {
-                    //TODO: log this, should keep eating items even if one is failed.
-                    e.printStackTrace();
+                } catch (InterruptedException | StorageException e) {
+                    LOGGER.warn("Failed to handle result", e);
                 }
             }
         }

@@ -1,7 +1,6 @@
 package com.auo.juppy.controllers;
 
 
-import com.auo.juppy.db.StorageException;
 import com.auo.juppy.http.BadRequestException;
 import com.auo.juppy.runner.RunnerConfig;
 import com.auo.juppy.runner.RunnerManager;
@@ -30,6 +29,7 @@ public class RunnerController {
 
     public void delete(Context ctx) throws BadRequestException {
         runnerManager.delete(UrlUtil.getIdFromPath(ctx));
+
     }
 
     public void create(Context ctx) throws BadRequestException {
@@ -42,8 +42,6 @@ public class RunnerController {
             ctx.result(config.id.toString());
         } catch (BadRequestResponse e) {
             throw new BadRequestException("Body is null");
-        } catch (StorageException e) {
-            throw new BadRequestException(e.getMessage());
         }
 
     }

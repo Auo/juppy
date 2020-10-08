@@ -4,14 +4,16 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class RunnerResult {
+    public final UUID id;
     public final int statusCode;
     public final long responseTime;
     public final UUID runnerId;
 
-    public RunnerResult(int statusCode, long responseTime, UUID runnerId) {
+    public RunnerResult(int statusCode, long responseTime, UUID runnerId, UUID id) {
         this.statusCode = statusCode;
         this.responseTime = responseTime;
         this.runnerId = runnerId;
+        this.id = id;
     }
 
     @Override
@@ -21,7 +23,8 @@ public class RunnerResult {
         RunnerResult that = (RunnerResult) o;
         return statusCode == that.statusCode &&
                 responseTime == that.responseTime &&
-                Objects.equals(runnerId, that.runnerId);
+                Objects.equals(runnerId, that.runnerId) &&
+                Objects.equals(id, that.id);
     }
 
     @Override
