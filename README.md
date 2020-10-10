@@ -1,5 +1,7 @@
 # Juppy
 
+![Java CI](https://github.com/Auo/juppy/workflows/Java%20CI/badge.svg)
+
 A Java uptime monitor for personal use, currently there is no authentication or role handling.
 
 ## Endpoints
