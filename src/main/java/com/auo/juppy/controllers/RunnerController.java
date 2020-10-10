@@ -36,13 +36,20 @@ public class RunnerController {
         RunnerConfig config;
         try {
             config = ctx.bodyAsClass(RunnerConfig.class);
-            config.id = UUID.randomUUID();
-
-            runnerManager.create(config);
-            ctx.result(config.id.toString());
         } catch (BadRequestResponse e) {
             throw new BadRequestException("Body is null");
         }
+
+        config.id = UUID.randomUUID();
+
+        try {
+            config.isValid();
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException(e.getMessage());
+        }
+
+        runnerManager.create(config);
+        ctx.result(config.id.toString());
 
     }
 
