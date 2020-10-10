@@ -4,6 +4,12 @@
 
 A Java uptime monitor for personal use, currently there is no authentication or role handling.
 
+
+Inspired by a [tweet](https://twitter.com/levelsio/status/1303812935773556736) from @levelsio, stating that
+uptime monitors shouldn't be built because it's a saturated market.
+
+I couldn't say no to that, it just seemed like a little fun project to tinker with.
+
 ## Endpoints
 
 |Method | Path | Description |
