@@ -11,6 +11,7 @@ import java.util.Properties;
 
 public class Config {
     public static final String SQLITE_PATH = "sqlite.path";
+    public static final String SERVER_PORT = "server.port";
     //TODO: implement these
     public static final String LOGBACK_PATH = "logback.path";
     public static final String RESULT_DURATION = "result.duration";
@@ -20,6 +21,7 @@ public class Config {
     private String sqlitePath;
     private Duration resultKeepDuration;
     private String logbackPath;
+    private int port;
 
     public Config(File file) throws IOException {
         Properties props = new Properties();
@@ -40,6 +42,7 @@ public class Config {
         this.sqlitePath = properties.getProperty(SQLITE_PATH);
         this.logbackPath = properties.getProperty(LOGBACK_PATH);
         this.resultKeepDuration = Duration.parse(properties.getProperty(RESULT_DURATION, "P7D"));
+        this.port = Integer.parseInt(properties.getProperty(SERVER_PORT, "3000"));
     }
 
     public String getSqlitePath() {
@@ -54,6 +57,7 @@ public class Config {
         return logbackPath;
     }
 
-
-    // Config should then be used to create a wrapper obnject which holds reporters and similar.
+    public int getPort() {
+        return port;
+    }
 }

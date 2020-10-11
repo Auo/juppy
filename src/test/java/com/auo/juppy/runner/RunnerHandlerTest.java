@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-public class RunnerManagerTest {
+public class RunnerHandlerTest {
     private static final URI EXAMPLE_URI = URI.create("https://example.com");
 
     @Test
@@ -32,7 +32,7 @@ public class RunnerManagerTest {
         when(defaultHttpClient.send(any(), any())).thenReturn(response);
 
 
-        RunnerManager.ConnectivityRunner cr = new RunnerManager.ConnectivityRunner(EXAMPLE_URI, 1000, queue, UUID.randomUUID(), defaultHttpClient);
+        RunnerHandler.ConnectivityRunner cr = new RunnerHandler.ConnectivityRunner(EXAMPLE_URI, 1000, queue, UUID.randomUUID(), defaultHttpClient);
 
         cr.run();
 
@@ -49,7 +49,7 @@ public class RunnerManagerTest {
         HttpResponse<Object> response = new MockResponse<>(500, EXAMPLE_URI);
         when(defaultHttpClient.send(any(), any())).thenReturn(response);
 
-        RunnerManager.ConnectivityRunner cr = new RunnerManager.ConnectivityRunner(EXAMPLE_URI, 1000, queue, UUID.randomUUID(), defaultHttpClient);
+        RunnerHandler.ConnectivityRunner cr = new RunnerHandler.ConnectivityRunner(EXAMPLE_URI, 1000, queue, UUID.randomUUID(), defaultHttpClient);
 
         cr.run();
 
@@ -64,7 +64,7 @@ public class RunnerManagerTest {
         ArrayBlockingQueue<RunnerResult> queue = new ArrayBlockingQueue<>(2);
         when(defaultHttpClient.send(any(), any())).thenThrow(new InterruptedException());
 
-        RunnerManager.ConnectivityRunner cr = new RunnerManager.ConnectivityRunner(EXAMPLE_URI, 1000, queue, UUID.randomUUID(), defaultHttpClient);
+        RunnerHandler.ConnectivityRunner cr = new RunnerHandler.ConnectivityRunner(EXAMPLE_URI, 1000, queue, UUID.randomUUID(), defaultHttpClient);
 
         cr.run();
 

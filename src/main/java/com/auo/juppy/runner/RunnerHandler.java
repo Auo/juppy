@@ -21,15 +21,15 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-public class RunnerManager implements AutoCloseable {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RunnerManager.class);
+public class RunnerHandler implements AutoCloseable {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RunnerHandler.class);
 
     private final ArrayBlockingQueue<RunnerResult> resultQueue;
     private final Storage storage;
     private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(2);
     private final ConcurrentHashMap<UUID, ScheduledFuture<?>> runners = new ConcurrentHashMap<>();
 
-    public RunnerManager(ArrayBlockingQueue<RunnerResult> resultQueue, Storage storage) throws StorageException {
+    public RunnerHandler(ArrayBlockingQueue<RunnerResult> resultQueue, Storage storage) throws StorageException {
         this.resultQueue = resultQueue;
         this.storage = storage;
         storage.getAll().forEach(this::startRunner);

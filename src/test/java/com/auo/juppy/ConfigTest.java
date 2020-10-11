@@ -27,6 +27,7 @@ public class ConfigTest {
         assertEquals(Duration.parse(duration), config.getResultKeepDuration());
         assertEquals(dbPath, config.getSqlitePath());
         assertEquals(logbackPath, config.getLogbackPath());
+        assertEquals(3000, config.getPort());
     }
 
 }
