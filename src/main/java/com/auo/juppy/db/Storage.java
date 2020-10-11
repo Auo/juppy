@@ -70,10 +70,10 @@ public interface Storage {
     class SQLiteStorage implements Storage {
         private final Connection connection;
 
-        public SQLiteStorage(Properties properties) {
+        public SQLiteStorage(String dbPath) {
             Flyway flyway;
             try {
-                flyway = Flyway.configure().configuration(properties).load();
+                flyway = Flyway.configure().configuration(Map.of("flyway.url", "jdbc:sqlite:" + dbPath)).load();
                 flyway.migrate();
             } catch (FlywayException e) {
                 throw new StorageException("Failed to setup flyway DB", e);
