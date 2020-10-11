@@ -32,7 +32,7 @@ public class RunnerHandlerTest {
         when(defaultHttpClient.send(any(), any())).thenReturn(response);
 
 
-        RunnerHandler.ConnectivityRunner cr = new RunnerHandler.ConnectivityRunner(EXAMPLE_URI, 1000, queue, UUID.randomUUID(), defaultHttpClient);
+        RunnerHandler.ConnectivityRunner cr = new RunnerHandler.ConnectivityRunner(EXAMPLE_URI, 1000, queue, UUID.randomUUID(), defaultHttpClient, null);
 
         cr.run();
 
@@ -49,7 +49,7 @@ public class RunnerHandlerTest {
         HttpResponse<Object> response = new MockResponse<>(500, EXAMPLE_URI);
         when(defaultHttpClient.send(any(), any())).thenReturn(response);
 
-        RunnerHandler.ConnectivityRunner cr = new RunnerHandler.ConnectivityRunner(EXAMPLE_URI, 1000, queue, UUID.randomUUID(), defaultHttpClient);
+        RunnerHandler.ConnectivityRunner cr = new RunnerHandler.ConnectivityRunner(EXAMPLE_URI, 1000, queue, UUID.randomUUID(), defaultHttpClient, null);
 
         cr.run();
 
@@ -64,7 +64,7 @@ public class RunnerHandlerTest {
         ArrayBlockingQueue<RunnerResult> queue = new ArrayBlockingQueue<>(2);
         when(defaultHttpClient.send(any(), any())).thenThrow(new InterruptedException());
 
-        RunnerHandler.ConnectivityRunner cr = new RunnerHandler.ConnectivityRunner(EXAMPLE_URI, 1000, queue, UUID.randomUUID(), defaultHttpClient);
+        RunnerHandler.ConnectivityRunner cr = new RunnerHandler.ConnectivityRunner(EXAMPLE_URI, 1000, queue, UUID.randomUUID(), defaultHttpClient, null);
 
         cr.run();
 

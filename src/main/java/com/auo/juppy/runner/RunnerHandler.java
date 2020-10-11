@@ -3,6 +3,7 @@ package com.auo.juppy.runner;
 import com.auo.juppy.db.Storage;
 import com.auo.juppy.db.StorageException;
 import com.auo.juppy.result.RunnerResult;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,19 +27,21 @@ public class RunnerHandler implements AutoCloseable {
 
     private final ArrayBlockingQueue<RunnerResult> resultQueue;
     private final Storage storage;
+    private final String userAgent;
     private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(2);
     private final ConcurrentHashMap<UUID, ScheduledFuture<?>> runners = new ConcurrentHashMap<>();
 
-    public RunnerHandler(ArrayBlockingQueue<RunnerResult> resultQueue, Storage storage) throws StorageException {
+    public RunnerHandler(ArrayBlockingQueue<RunnerResult> resultQueue, Storage storage, @Nullable String userAgent) throws StorageException {
         this.resultQueue = resultQueue;
         this.storage = storage;
+        this.userAgent = userAgent;
         storage.getAll().forEach(this::startRunner);
     }
 
 
     private void startRunner(RunnerConfig config) {
         runners.put(config.id, executor.scheduleWithFixedDelay(
-                new ConnectivityRunner(config.uri, config.timeout, resultQueue, config.id),
+                new ConnectivityRunner(config.uri, config.timeout, resultQueue, config.id, userAgent),
                 0,
                 config.interval,
                 TimeUnit.MILLISECONDS));
@@ -75,29 +78,38 @@ public class RunnerHandler implements AutoCloseable {
 
     public static class ConnectivityRunner implements Runnable {
         private final HttpClient client;
+        private final String userAgent;
         private final URI uri;
         private final long timeout;
         private final ArrayBlockingQueue<RunnerResult> resultQueue;
         private final UUID runnerId;
 
         @TestOnly
-        protected ConnectivityRunner(URI uri, long timeout, ArrayBlockingQueue<RunnerResult> resultQueue, UUID runnerId, HttpClient client) {
+        protected ConnectivityRunner(URI uri, long timeout, ArrayBlockingQueue<RunnerResult> resultQueue,
+                                     UUID runnerId, HttpClient client, @Nullable String userAgent) {
             this.uri = uri;
             this.timeout = timeout;
             this.resultQueue = resultQueue;
             this.runnerId = runnerId;
             this.client = client;
+            this.userAgent = userAgent;
         }
 
-        public ConnectivityRunner(URI uri, long timeout, ArrayBlockingQueue<RunnerResult> resultQueue, UUID runnerId) {
-            this(uri, timeout, resultQueue, runnerId, HttpClient.newHttpClient());
+        public ConnectivityRunner(URI uri, long timeout, ArrayBlockingQueue<RunnerResult> resultQueue,
+                                  UUID runnerId, @Nullable String userAgent) {
+            this(uri, timeout, resultQueue, runnerId, HttpClient.newHttpClient(), userAgent);
         }
 
         public void run() {
-            HttpRequest request = HttpRequest.newBuilder()
+            HttpRequest.Builder builder = HttpRequest.newBuilder()
                     .uri(uri)
-                    .timeout(Duration.ofMillis(timeout))
-                    .build();
+                    .timeout(Duration.ofMillis(timeout));
+
+            if (userAgent != null) {
+                builder = builder.header("User-Agent", userAgent);
+            }
+
+            HttpRequest request = builder.build();
 
             long start = System.currentTimeMillis();
             int statusCode = -1;

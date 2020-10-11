@@ -12,6 +12,7 @@ import java.util.Properties;
 public class Config {
     public static final String SQLITE_PATH = "sqlite.path";
     public static final String SERVER_PORT = "server.port";
+    public static final String RUNNER_AGENT = "runner.user-agent";
     //TODO: implement these
     public static final String LOGBACK_PATH = "logback.path";
     public static final String RESULT_DURATION = "result.duration";
@@ -22,6 +23,7 @@ public class Config {
     private Duration resultKeepDuration;
     private String logbackPath;
     private int port;
+    private String runnerUserAgent;
 
     public Config(File file) throws IOException {
         Properties props = new Properties();
@@ -43,6 +45,7 @@ public class Config {
         this.logbackPath = properties.getProperty(LOGBACK_PATH);
         this.resultKeepDuration = Duration.parse(properties.getProperty(RESULT_DURATION, "P7D"));
         this.port = Integer.parseInt(properties.getProperty(SERVER_PORT, "3000"));
+        this.runnerUserAgent = properties.getProperty(RUNNER_AGENT);
     }
 
     public String getSqlitePath() {
@@ -59,5 +62,9 @@ public class Config {
 
     public int getPort() {
         return port;
+    }
+
+    public String getRunnerUserAgent() {
+        return runnerUserAgent;
     }
 }

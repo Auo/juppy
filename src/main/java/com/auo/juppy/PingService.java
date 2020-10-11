@@ -24,7 +24,7 @@ public class PingService implements AutoCloseable {
 
         // TODO: create reporters based on config
         this.resultHandler = new ResultHandler(queue, storage, List.of());
-        this.runnerHandler = new RunnerHandler(queue, storage);
+        this.runnerHandler = new RunnerHandler(queue, storage, config.getRunnerUserAgent());
     }
 
     @Override
