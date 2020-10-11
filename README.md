@@ -28,10 +28,6 @@ I couldn't say no to that, it just seemed like a little fun project to tinker wi
     * Stdout
     * Email
     * SMS
-* Add CLI options
-    * Reporters
-    * DB file location
-    * Choose reporters
 * Super simple GUI with graphs over results
 * Remove results after X time
 * Validate timeout and interval values
