@@ -12,13 +12,15 @@ import java.util.concurrent.ArrayBlockingQueue;
 public class ResultHandler implements AutoCloseable {
     private static final Logger LOGGER = LoggerFactory.getLogger(ResultHandler.class);
     protected final QueueConsumer consumer;
-    protected static final RunnerResult POISON_RECORD = new RunnerResult(
-            -1,
-            -1,
-            UUID.fromString("69ec27b6-83b8-427d-a8d4-027a31f33a95"),
-            UUID.fromString("cf2b272f-c303-43fd-a40f-4ca134d92601"));
+    protected static final QueueItem POISON_RECORD =
+            new QueueItem(new RunnerResult(
+                    -1,
+                    -1,
+                    UUID.fromString("69ec27b6-83b8-427d-a8d4-027a31f33a95"),
+                    UUID.fromString("cf2b272f-c303-43fd-a40f-4ca134d92601")),
+                    null);
 
-    public ResultHandler(ArrayBlockingQueue<RunnerResult> queue, Storage storage, List<Reporter> reporters) {
+    public ResultHandler(ArrayBlockingQueue<QueueItem> queue, Storage storage, List<Reporter> reporters) {
         this.consumer = new QueueConsumer(queue, storage, reporters);
         Thread consumerThread = new Thread(consumer, "queue-consumer-thread");
         consumerThread.start();
@@ -30,11 +32,11 @@ public class ResultHandler implements AutoCloseable {
     }
 
     protected static class QueueConsumer implements Runnable {
-        private final ArrayBlockingQueue<RunnerResult> queue;
+        private final ArrayBlockingQueue<QueueItem> queue;
         private final Storage storage;
         private final List<Reporter> reporters;
 
-        public QueueConsumer(ArrayBlockingQueue<RunnerResult> queue, Storage storage, List<Reporter> reporters) {
+        public QueueConsumer(ArrayBlockingQueue<QueueItem> queue, Storage storage, List<Reporter> reporters) {
             this.queue = queue;
             this.storage = storage;
             this.reporters = reporters;
@@ -48,14 +50,14 @@ public class ResultHandler implements AutoCloseable {
         public void run() {
             while (true) {
                 try {
-                    RunnerResult result = queue.take();
-                    if (result.equals(POISON_RECORD)) {
+                    QueueItem item = queue.take();
+                    if (item.equals(POISON_RECORD)) {
                         return;
                     }
-                    storage.saveResult(result);
+                    storage.saveResult(item.result);
 
-                    if (result.statusCode % 2 != 0) {
-                        reporters.forEach(r -> r.notify(result));
+                    if (item.result.statusCode % 2 != 0) {
+                        reporters.forEach(r -> r.notify(item.result, item.uri));
                     }
                 } catch (InterruptedException | StorageException e) {
                     LOGGER.warn("Failed to handle result", e);

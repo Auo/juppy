@@ -21,13 +21,43 @@ I couldn't say no to that, it just seemed like a little fun project to tinker wi
 | `GET` | /results/:id | results of runner |
 | `GET` | /health-check | 200 OK if running |
 
+
+## Configuration
+
+A path needs to be pass along to the service when launching it. This path should point out a configuration file.
+
+### Example config file
+
+```properties
+# path to sqlite database, otherwise memory database will be used
+sqlite.path=/path/to/dbfile.db
+logback.path=/path/logback.xml
+result.duration=PT24H
+
+# mail settings
+mail.auth=true
+mail.smtp.host=host
+mail.smtp.port=port
+mail.smtp.starttls.enable=true
+
+# who result is mailed from
+mail.from=
+# where result should be mailed
+mail.to=
+# should be the same as mail.from ( if authenticaion is used )
+# these credentials will be used when authentication with the smtp server
+mail.auth.username=
+mail.auth.password=
+```
+
+
+
 ## Todo
 * Docker 
     * Java 13+
-* Create an actual Reporter
-    * Stdout
-    * Email
-    * SMS
+* Create more Reporters
+    * Log reporter, log to where?
+    * SMS?
 * Super simple GUI with graphs over results
 * Remove results after X time
 * Validate timeout and interval values

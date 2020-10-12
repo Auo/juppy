@@ -2,6 +2,7 @@ package com.auo.juppy.runner;
 
 import com.auo.juppy.db.Storage;
 import com.auo.juppy.db.StorageException;
+import com.auo.juppy.result.QueueItem;
 import com.auo.juppy.result.RunnerResult;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.TestOnly;
@@ -25,13 +26,13 @@ import java.util.concurrent.TimeUnit;
 public class RunnerHandler implements AutoCloseable {
     private static final Logger LOGGER = LoggerFactory.getLogger(RunnerHandler.class);
 
-    private final ArrayBlockingQueue<RunnerResult> resultQueue;
+    private final ArrayBlockingQueue<QueueItem> resultQueue;
     private final Storage storage;
     private final String userAgent;
     private final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(2);
     private final ConcurrentHashMap<UUID, ScheduledFuture<?>> runners = new ConcurrentHashMap<>();
 
-    public RunnerHandler(ArrayBlockingQueue<RunnerResult> resultQueue, Storage storage, @Nullable String userAgent) throws StorageException {
+    public RunnerHandler(ArrayBlockingQueue<QueueItem> resultQueue, Storage storage, @Nullable String userAgent) throws StorageException {
         this.resultQueue = resultQueue;
         this.storage = storage;
         this.userAgent = userAgent;
@@ -81,11 +82,11 @@ public class RunnerHandler implements AutoCloseable {
         private final String userAgent;
         private final URI uri;
         private final long timeout;
-        private final ArrayBlockingQueue<RunnerResult> resultQueue;
+        private final ArrayBlockingQueue<QueueItem> resultQueue;
         private final UUID runnerId;
 
         @TestOnly
-        protected ConnectivityRunner(URI uri, long timeout, ArrayBlockingQueue<RunnerResult> resultQueue,
+        protected ConnectivityRunner(URI uri, long timeout, ArrayBlockingQueue<QueueItem> resultQueue,
                                      UUID runnerId, HttpClient client, @Nullable String userAgent) {
             this.uri = uri;
             this.timeout = timeout;
@@ -95,7 +96,7 @@ public class RunnerHandler implements AutoCloseable {
             this.userAgent = userAgent;
         }
 
-        public ConnectivityRunner(URI uri, long timeout, ArrayBlockingQueue<RunnerResult> resultQueue,
+        public ConnectivityRunner(URI uri, long timeout, ArrayBlockingQueue<QueueItem> resultQueue,
                                   UUID runnerId, @Nullable String userAgent) {
             this(uri, timeout, resultQueue, runnerId, HttpClient.newHttpClient(), userAgent);
         }
@@ -120,7 +121,15 @@ public class RunnerHandler implements AutoCloseable {
                 LOGGER.warn("Failed to ping uri: " + uri.toString(), e);
                 // TODO: Which response code should it be if it fails?
             } finally {
-                resultQueue.add(new RunnerResult(statusCode, System.currentTimeMillis() - start, runnerId, UUID.randomUUID()));
+                resultQueue.add(
+                        new QueueItem(
+                                new RunnerResult(
+                                        statusCode,
+                                        System.currentTimeMillis() - start,
+                                        runnerId,
+                                        UUID.randomUUID()),
+                                uri)
+                );
             }
         }
     }

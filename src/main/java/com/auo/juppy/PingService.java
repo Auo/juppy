@@ -1,11 +1,16 @@
 package com.auo.juppy;
 
+import com.auo.juppy.config.ConfigException;
 import com.auo.juppy.db.Storage;
+import com.auo.juppy.result.QueueItem;
+import com.auo.juppy.result.Reporter;
 import com.auo.juppy.result.ResultHandler;
-import com.auo.juppy.result.RunnerResult;
 import com.auo.juppy.runner.RunnerHandler;
 
+import javax.mail.internet.AddressException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.ArrayBlockingQueue;
 
 public class PingService implements AutoCloseable {
@@ -20,10 +25,10 @@ public class PingService implements AutoCloseable {
                 ? new Storage.SQLiteStorage(dbPath)
                 : new Storage.MemoryStorage();
 
-        ArrayBlockingQueue<RunnerResult> queue = new ArrayBlockingQueue<>(2);
+        ArrayBlockingQueue<QueueItem> queue = new ArrayBlockingQueue<>(2);
 
-        // TODO: create reporters based on config
-        this.resultHandler = new ResultHandler(queue, storage, List.of());
+        List<Reporter> reporters = createReporters(config);
+        this.resultHandler = new ResultHandler(queue, storage, reporters);
         this.runnerHandler = new RunnerHandler(queue, storage, config.getRunnerUserAgent());
     }
 
@@ -39,5 +44,20 @@ public class PingService implements AutoCloseable {
 
     public Storage getStorage() {
         return storage;
+    }
+
+    private List<Reporter> createReporters(Config config) {
+        List<Reporter> reporters = new ArrayList<>();
+
+        Properties mail = config.getMailProperties();
+
+        if (!mail.isEmpty()) {
+            try {
+                reporters.add(new Reporter.EmailReporter(mail));
+            } catch (AddressException e) {
+                throw new ConfigException("Invalid addresses found", e);
+            }
+        }
+        return reporters;
     }
 }

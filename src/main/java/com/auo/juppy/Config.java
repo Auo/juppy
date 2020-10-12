@@ -16,14 +16,20 @@ public class Config {
     //TODO: implement these
     public static final String LOGBACK_PATH = "logback.path";
     public static final String RESULT_DURATION = "result.duration";
-    // smtp info
-    // sms?
+
+    public static final String MAIL_AUTH_USERNAME = "mail.auth.username";
+    public static final String MAIL_AUTH_PASSWORD = "mail.auth.password";
+    public static final String MAIL_FROM = "mail.from";
+    public static final String MAIL_TO = "mail.to";
+    // Filter out all properties that are prefixed
+    private static final String MAIL_PREFIX = "mail.";
 
     private String sqlitePath;
     private Duration resultKeepDuration;
     private String logbackPath;
     private int port;
     private String runnerUserAgent;
+    private Properties mailProperties;
 
     public Config(File file) throws IOException {
         Properties props = new Properties();
@@ -46,6 +52,18 @@ public class Config {
         this.resultKeepDuration = Duration.parse(properties.getProperty(RESULT_DURATION, "P7D"));
         this.port = Integer.parseInt(properties.getProperty(SERVER_PORT, "3000"));
         this.runnerUserAgent = properties.getProperty(RUNNER_AGENT);
+        this.mailProperties = filterMailProperties(properties);
+    }
+
+    private Properties filterMailProperties(Properties properties) {
+        Properties mailProperties = new Properties();
+        properties.stringPropertyNames().forEach(key -> {
+            if (key.startsWith(MAIL_PREFIX)) {
+                    mailProperties.setProperty(key, properties.getProperty(key));
+            }
+        });
+
+        return mailProperties;
     }
 
     public String getSqlitePath() {
@@ -66,5 +84,9 @@ public class Config {
 
     public String getRunnerUserAgent() {
         return runnerUserAgent;
+    }
+
+    public Properties getMailProperties() {
+        return new Properties(mailProperties);
     }
 }
