@@ -14,6 +14,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -120,7 +121,7 @@ public class RunnerHandler implements AutoCloseable {
                 LOGGER.warn("Failed to ping uri: " + uri.toString(), e);
                 // TODO: Which response code should it be if it fails?
             } finally {
-                resultQueue.add(new RunnerResult(statusCode, System.currentTimeMillis() - start, runnerId, UUID.randomUUID()));
+                resultQueue.add(new RunnerResult(statusCode, System.currentTimeMillis() - start, runnerId, UUID.randomUUID(), Instant.now().getEpochSecond()));
             }
         }
     }

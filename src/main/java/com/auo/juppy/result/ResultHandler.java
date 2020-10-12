@@ -16,7 +16,8 @@ public class ResultHandler implements AutoCloseable {
             -1,
             -1,
             UUID.fromString("69ec27b6-83b8-427d-a8d4-027a31f33a95"),
-            UUID.fromString("cf2b272f-c303-43fd-a40f-4ca134d92601"));
+            UUID.fromString("cf2b272f-c303-43fd-a40f-4ca134d92601"),
+            -1);
 
     public ResultHandler(ArrayBlockingQueue<RunnerResult> queue, Storage storage, List<Reporter> reporters) {
         this.consumer = new QueueConsumer(queue, storage, reporters);

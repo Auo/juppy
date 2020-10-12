@@ -36,7 +36,7 @@ public class ResultHandlerTest {
     @Test
     public void testStoragePropagation() throws InterruptedException {
         ArrayBlockingQueue<RunnerResult> queue = new ArrayBlockingQueue<>(2);
-        RunnerResult orgResult = new RunnerResult(200, 300, UUID.randomUUID(), UUID.randomUUID());
+        RunnerResult orgResult = new RunnerResult(200, 300, UUID.randomUUID(), UUID.randomUUID(), -1);
         queue.put(orgResult);
         queue.put(ResultHandler.POISON_RECORD);
 

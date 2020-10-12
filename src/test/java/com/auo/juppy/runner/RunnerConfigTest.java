@@ -11,34 +11,34 @@ public class RunnerConfigTest {
 
     @Test
     public void testValid() {
-        RunnerConfig config = RunnerConfig.create(URI.create("http://example.com"), 1000, 1000, UUID.randomUUID());
+        RunnerConfig config = RunnerConfig.create(URI.create("http://example.com"), 1000, 1000, UUID.randomUUID(), -1);
         config.isValid();
 
-        config = RunnerConfig.create(URI.create("https://www.example.com"), 1000, 1000, UUID.randomUUID());
+        config = RunnerConfig.create(URI.create("https://www.example.com"), 1000, 1000, UUID.randomUUID(), -1);
         config.isValid();
     }
 
     @Test
     public void testInvalidHost() {
-        RunnerConfig config = RunnerConfig.create(URI.create("https://.com"), 1000, 1000, UUID.randomUUID());
+        RunnerConfig config = RunnerConfig.create(URI.create("https://.com"), 1000, 1000, UUID.randomUUID(), -1);
         assertThrows(IllegalArgumentException.class, config::isValid);
     }
 
     @Test
     public void testInvalidScheme() {
-        RunnerConfig config = RunnerConfig.create(URI.create("file://example.com"), 1000, 1000, UUID.randomUUID());
+        RunnerConfig config = RunnerConfig.create(URI.create("file://example.com"), 1000, 1000, UUID.randomUUID(), -1);
         assertThrows(IllegalArgumentException.class, config::isValid);
     }
 
     @Test
     public void testInvalidTimeout() {
-        RunnerConfig config = RunnerConfig.create(URI.create("file://example.com"), -1, 1000, UUID.randomUUID());
+        RunnerConfig config = RunnerConfig.create(URI.create("file://example.com"), -1, 1000, UUID.randomUUID(), -1);
         assertThrows(IllegalArgumentException.class, config::isValid);
     }
 
     @Test
     public void testInvalidInterval() {
-        RunnerConfig config = RunnerConfig.create(URI.create("file://example.com"), 1000, -1, UUID.randomUUID());
+        RunnerConfig config = RunnerConfig.create(URI.create("file://example.com"), 1000, -1, UUID.randomUUID(), -1);
         assertThrows(IllegalArgumentException.class, config::isValid);
     }
 

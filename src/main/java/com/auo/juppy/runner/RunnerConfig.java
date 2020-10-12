@@ -8,6 +8,7 @@ import java.util.regex.Pattern;
 public class RunnerConfig {
     private static final Pattern SCHEME = Pattern.compile("http|https");
 
+    public long created;
     public URI uri;
     public long timeout;
     public long interval;
@@ -18,15 +19,18 @@ public class RunnerConfig {
         return "uri: " + uri + "\n" +
                 "timeout: " + timeout + "\n" +
                 "interval: " + interval + "\n" +
+                "created: " + created + "\n" +
                 "id: " + (id != null ? id.toString() : "NULL") + "\n\n";
     }
 
-    public static RunnerConfig create(URI uri, long timeout, long interval, UUID id) {
+    public static RunnerConfig create(URI uri, long timeout, long interval, UUID id, long created) {
+
         RunnerConfig config = new RunnerConfig();
         config.uri = uri;
         config.timeout = timeout;
         config.interval = interval;
         config.id = id;
+        config.created = created;
 
         return config;
     }

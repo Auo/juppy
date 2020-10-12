@@ -7,6 +7,7 @@ import com.auo.juppy.runner.RunnerHandler;
 import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,6 +42,7 @@ public class RunnerController {
         }
 
         config.id = UUID.randomUUID();
+        config.created = Instant.now().getEpochSecond();
 
         try {
             config.isValid();

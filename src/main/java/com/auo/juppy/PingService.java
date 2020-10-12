@@ -1,5 +1,7 @@
 package com.auo.juppy;
 
+import com.auo.juppy.db.MemoryStorage;
+import com.auo.juppy.db.SQLiteStorage;
 import com.auo.juppy.db.Storage;
 import com.auo.juppy.result.ResultHandler;
 import com.auo.juppy.result.RunnerResult;
@@ -17,8 +19,8 @@ public class PingService implements AutoCloseable {
 
         String dbPath = config.getSqlitePath();
         this.storage = dbPath != null
-                ? new Storage.SQLiteStorage(dbPath)
-                : new Storage.MemoryStorage();
+                ? new SQLiteStorage(dbPath)
+                : new MemoryStorage();
 
         ArrayBlockingQueue<RunnerResult> queue = new ArrayBlockingQueue<>(2);
 

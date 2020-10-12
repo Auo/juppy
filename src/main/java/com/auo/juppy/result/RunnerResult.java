@@ -8,12 +8,14 @@ public class RunnerResult {
     public final int statusCode;
     public final long responseTime;
     public final UUID runnerId;
+    public final long timestamp;
 
-    public RunnerResult(int statusCode, long responseTime, UUID runnerId, UUID id) {
+    public RunnerResult(int statusCode, long responseTime, UUID runnerId, UUID id, long timestamp) {
         this.statusCode = statusCode;
         this.responseTime = responseTime;
         this.runnerId = runnerId;
         this.id = id;
+        this.timestamp = timestamp;
     }
 
     @Override
@@ -23,18 +25,21 @@ public class RunnerResult {
         RunnerResult that = (RunnerResult) o;
         return statusCode == that.statusCode &&
                 responseTime == that.responseTime &&
+                timestamp == that.timestamp &&
                 Objects.equals(runnerId, that.runnerId) &&
                 Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(statusCode, responseTime, runnerId);
+        return Objects.hash(statusCode, responseTime, runnerId, timestamp, id);
     }
 
     @Override
     public String toString() {
-        return "status: " + statusCode + "\n" +
+        return  "id: " + id + "\n" +
+                "timestamp: " + timestamp + "\n" +
+                "statusCode: " + statusCode + "\n" +
                 "runnerId: " + runnerId + "\n" +
                 "responseTime: " + responseTime + "\n\n";
     }
