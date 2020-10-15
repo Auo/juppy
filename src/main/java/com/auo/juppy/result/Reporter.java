@@ -54,10 +54,6 @@ public interface Reporter {
                             return null;
                         }
 
-                        if (username == null || password == null) {
-                            return null;
-                        }
-
                         return new PasswordAuthentication(username, password);
                     }
                 });
