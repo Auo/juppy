@@ -33,6 +33,12 @@ A path needs to be pass along to the service when launching it. This path should
 sqlite.path=/path/to/dbfile.db
 logback.path=/path/logback.xml
 result.duration=PT24H
+# port to run service on
+server.port=3000
+# user agent for runner
+runner.user-agent=
+
+
 
 # mail settings
 mail.auth=true
