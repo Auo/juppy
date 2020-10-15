@@ -1,5 +1,6 @@
 package com.auo.juppy.runner;
 
+import com.auo.juppy.result.QueueItem;
 import com.auo.juppy.result.RunnerResult;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -26,7 +27,7 @@ public class RunnerHandlerTest {
     public void test200Response() throws IOException, InterruptedException {
         HttpClient defaultHttpClient = Mockito.mock(HttpClient.class);
 
-        ArrayBlockingQueue<RunnerResult> queue = new ArrayBlockingQueue<>(2);
+        ArrayBlockingQueue<QueueItem> queue = new ArrayBlockingQueue<>(2);
 
         HttpResponse<Object> response = new MockResponse<>(200, EXAMPLE_URI);
         when(defaultHttpClient.send(any(), any())).thenReturn(response);
@@ -37,14 +38,14 @@ public class RunnerHandlerTest {
         cr.run();
 
         assertEquals(1, queue.size());
-        assertEquals(200, queue.take().statusCode);
+        assertEquals(200, queue.take().result.statusCode);
     }
 
     @Test
     public void test500Response() throws InterruptedException, IOException {
         HttpClient defaultHttpClient = Mockito.mock(HttpClient.class);
 
-        ArrayBlockingQueue<RunnerResult> queue = new ArrayBlockingQueue<>(2);
+        ArrayBlockingQueue<QueueItem> queue = new ArrayBlockingQueue<>(2);
 
         HttpResponse<Object> response = new MockResponse<>(500, EXAMPLE_URI);
         when(defaultHttpClient.send(any(), any())).thenReturn(response);
@@ -54,14 +55,14 @@ public class RunnerHandlerTest {
         cr.run();
 
         assertEquals(1, queue.size());
-        assertEquals(500, queue.take().statusCode);
+        assertEquals(500, queue.take().result.statusCode);
     }
 
     @Test
     public void testRequestInterrupted() throws InterruptedException, IOException {
         HttpClient defaultHttpClient = Mockito.mock(HttpClient.class);
 
-        ArrayBlockingQueue<RunnerResult> queue = new ArrayBlockingQueue<>(2);
+        ArrayBlockingQueue<QueueItem> queue = new ArrayBlockingQueue<>(2);
         when(defaultHttpClient.send(any(), any())).thenThrow(new InterruptedException());
 
         RunnerHandler.ConnectivityRunner cr = new RunnerHandler.ConnectivityRunner(EXAMPLE_URI, 1000, queue, UUID.randomUUID(), defaultHttpClient, null);
@@ -69,7 +70,7 @@ public class RunnerHandlerTest {
         cr.run();
 
         assertEquals(1, queue.size());
-        assertEquals(-1, queue.take().statusCode);
+        assertEquals(-1, queue.take().result.statusCode);
     }
 
 

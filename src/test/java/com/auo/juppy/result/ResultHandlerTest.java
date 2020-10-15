@@ -18,7 +18,7 @@ public class ResultHandlerTest {
     @Test
     @Timeout(value = 2)
     public void testPoisonRecord() throws InterruptedException {
-        ArrayBlockingQueue<RunnerResult> queue = new ArrayBlockingQueue<>(2);
+        ArrayBlockingQueue<QueueItem> queue = new ArrayBlockingQueue<>(2);
         ResultHandler.QueueConsumer consumer = new ResultHandler.QueueConsumer(queue, new TestStorage(), List.of());
 
         ExecutorService executor = Executors.newCachedThreadPool();
@@ -35,8 +35,8 @@ public class ResultHandlerTest {
 
     @Test
     public void testStoragePropagation() throws InterruptedException {
-        ArrayBlockingQueue<RunnerResult> queue = new ArrayBlockingQueue<>(2);
-        RunnerResult orgResult = new RunnerResult(200, 300, UUID.randomUUID(), UUID.randomUUID(), -1);
+        ArrayBlockingQueue<QueueItem> queue = new ArrayBlockingQueue<>(2);
+        QueueItem orgResult = new QueueItem(new RunnerResult(200, 300, UUID.randomUUID(), UUID.randomUUID(), -1), null);
         queue.put(orgResult);
         queue.put(ResultHandler.POISON_RECORD);
 
@@ -49,7 +49,7 @@ public class ResultHandlerTest {
         assertEquals(1, storage.results.size());
         RunnerResult storedResult = storage.results.get(0);
 
-        assertEquals(storedResult, orgResult);
+        assertEquals(storedResult, orgResult.result);
 
     }
 
