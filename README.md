@@ -56,7 +56,10 @@ mail.auth.username=
 mail.auth.password=
 ```
 
+## Run
+Build the project locally with maven, `mvn clean install` and then go to the `target` directory.
 
+To launch the application, run `java -jar juppy-1.0-SNAPSHOT-jar-with-dependencies.jar /path/to/config.properties`
 
 ## Todo
 * Docker 
