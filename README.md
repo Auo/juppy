@@ -61,13 +61,3 @@ Build the project locally with maven, `mvn clean install` and then go to the `ta
 
 To launch the application, run `java -jar juppy-1.0-SNAPSHOT-jar-with-dependencies.jar /path/to/config.properties`
 
-## Todo
-* Docker 
-    * Java 13+
-* Create more Reporters
-    * Log reporter, log to where?
-    * SMS?
-* Super simple GUI with graphs over results
-* Remove results after X time
-* Validate timeout and interval values
-* Change timeout and interval to `ISO8601` format
