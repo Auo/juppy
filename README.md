@@ -32,7 +32,6 @@ A path needs to be pass along to the service when launching it. This path should
 # path to sqlite database, otherwise memory database will be used
 sqlite.path=/path/to/dbfile.db
 logback.path=/path/logback.xml
-result.duration=PT24H
 # port to run service on
 server.port=3000
 # user agent for runner

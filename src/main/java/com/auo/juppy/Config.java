@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.Duration;
 import java.util.Properties;
 
 public class Config {
@@ -15,7 +14,6 @@ public class Config {
     public static final String RUNNER_AGENT = "runner.user-agent";
     //TODO: implement these
     public static final String LOGBACK_PATH = "logback.path";
-    public static final String RESULT_DURATION = "result.duration";
 
     public static final String MAIL_AUTH_USERNAME = "mail.auth.username";
     public static final String MAIL_AUTH_PASSWORD = "mail.auth.password";
@@ -25,7 +23,6 @@ public class Config {
     private static final String MAIL_PREFIX = "mail.";
 
     private String sqlitePath;
-    private Duration resultKeepDuration;
     private String logbackPath;
     private int port;
     private String runnerUserAgent;
@@ -49,7 +46,6 @@ public class Config {
     protected void validate(Properties properties) {
         this.sqlitePath = properties.getProperty(SQLITE_PATH);
         this.logbackPath = properties.getProperty(LOGBACK_PATH);
-        this.resultKeepDuration = Duration.parse(properties.getProperty(RESULT_DURATION, "P7D"));
         this.port = Integer.parseInt(properties.getProperty(SERVER_PORT, "3000"));
         this.runnerUserAgent = properties.getProperty(RUNNER_AGENT);
         this.mailProperties = filterMailProperties(properties);
@@ -59,7 +55,7 @@ public class Config {
         Properties mailProperties = new Properties();
         properties.stringPropertyNames().forEach(key -> {
             if (key.startsWith(MAIL_PREFIX)) {
-                    mailProperties.setProperty(key, properties.getProperty(key));
+                mailProperties.setProperty(key, properties.getProperty(key));
             }
         });
 
@@ -68,10 +64,6 @@ public class Config {
 
     public String getSqlitePath() {
         return sqlitePath;
-    }
-
-    public Duration getResultKeepDuration() {
-        return resultKeepDuration;
     }
 
     public String getLogbackPath() {
