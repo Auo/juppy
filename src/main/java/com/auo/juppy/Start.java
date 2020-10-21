@@ -1,5 +1,6 @@
 package com.auo.juppy;
 
+import ch.qos.logback.classic.util.ContextInitializer;
 import com.auo.juppy.db.StorageException;
 import com.auo.juppy.http.Server;
 import org.slf4j.Logger;
@@ -9,7 +10,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class Start {
-    private static final Logger LOGGER = LoggerFactory.getLogger(Start.class);
+    private static Logger LOGGER;
 
     public static void main(String[] args) throws StorageException, IOException {
         //Increase log-level for jetty. Otherwise be prepared for spam!
@@ -18,6 +19,12 @@ public class Start {
 
         //TODO: replace args with something more robust. picocli or jcommander?
         Config config = new Config(new File(args[0]));
+
+        if (config.getLogbackPath() != null) {
+            System.setProperty(ContextInitializer.CONFIG_FILE_PROPERTY, config.getLogbackPath());
+        }
+
+        LOGGER = LoggerFactory.getLogger(Start.class);
 
         PingService pingService = new PingService(config);
         Server server = new Server(

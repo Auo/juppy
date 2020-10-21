@@ -55,6 +55,23 @@ mail.auth.username=
 mail.auth.password=
 ```
 
+### Example logback.xml
+
+```xml
+<configuration debug="true">
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="debug">
+        <appender-ref ref="STDOUT" />
+    </root>
+</configuration>
+```
+
 ## Run
 Build the project locally with maven, `mvn clean install` and then go to the `target` directory.
 
