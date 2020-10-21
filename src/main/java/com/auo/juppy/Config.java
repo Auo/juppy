@@ -12,7 +12,6 @@ public class Config {
     public static final String SQLITE_PATH = "sqlite.path";
     public static final String SERVER_PORT = "server.port";
     public static final String RUNNER_AGENT = "runner.user-agent";
-    //TODO: implement these
     public static final String LOGBACK_PATH = "logback.path";
 
     public static final String MAIL_AUTH_USERNAME = "mail.auth.username";
