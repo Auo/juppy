@@ -37,9 +37,8 @@ server.port=3000
 # user agent for runner
 runner.user-agent=
 
-
-
 # mail settings
+# all settings prefix with "mail." will be used
 mail.auth=true
 mail.smtp.host=host
 mail.smtp.port=port
