@@ -48,7 +48,7 @@ mail.smtp.starttls.enable=true
 mail.from=
 # where result should be mailed
 mail.to=
-# should be the same as mail.from ( if authenticaion is used )
+# should be the same as mail.from ( if authentication is used )
 # these credentials will be used when authentication with the smtp server
 mail.auth.username=
 mail.auth.password=
@@ -72,7 +72,7 @@ mail.auth.password=
 ```
 
 ## Run
-Build the project locally with maven, `mvn clean install` and then go to the `target` directory.
+Build the project locally with Maven, `mvn clean install` and then go to the `target` directory.
 
 To launch the application, run `java -jar juppy-1.0-SNAPSHOT-jar-with-dependencies.jar /path/to/config.properties`
 
