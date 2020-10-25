@@ -46,7 +46,10 @@ public class SQLiteStorage implements Storage {
 
                 if (!statement.execute()) {
                     int updatedRows = statement.getUpdateCount();
-                    System.out.println(updatedRows);
+
+                    if (updatedRows != 1) {
+                        throw new StorageException("Expected one inserted row. Got " + updatedRows);
+                    }
                 }
             }
         } catch (SQLException e) {

@@ -3,6 +3,7 @@ package com.auo.juppy.http;
 import com.auo.juppy.controllers.HealthCheckController;
 import com.auo.juppy.controllers.ResultController;
 import com.auo.juppy.controllers.RunnerController;
+import com.auo.juppy.controllers.UIController;
 import com.auo.juppy.db.Storage;
 import com.auo.juppy.runner.RunnerHandler;
 import io.javalin.Javalin;
@@ -16,16 +17,21 @@ public class Server implements AutoCloseable {
     public Server(RunnerHandler runnerHandler, Storage storage, int port) {
         RunnerController runnerController = new RunnerController(runnerHandler);
         ResultController resultController = new ResultController(storage);
+        UIController uiController = new UIController(storage);
 
         this.app = Javalin.create()
+
                 .get("health-check", HealthCheckController::status)
 
-                .get("runners", runnerController::getAll)
-                .get("runners/:id", runnerController::getOne)
-                .delete("runners/:id", runnerController::delete)
-                .post("runners", runnerController::create)
+                .get("api/runners", runnerController::getAll)
+                .get("api/runners/:id", runnerController::getOne)
+                .delete("api/runners/:id", runnerController::delete)
+                .post("api/runners", runnerController::create)
 
-                .get("results/:id", resultController::get)
+                .get("api/results/:id", resultController::get)
+
+                .get("/", uiController::root)
+                .get("/runners/:id", uiController::runners)
 
                 .exception(BadRequestException.class, ((e, context) -> {
                     //TODO: throw this from controllers, when handled. The next exception() will be a fallback.
