@@ -10,15 +10,19 @@ uptime monitors shouldn't be built because it's a saturated market.
 
 I couldn't say no to that, it just seemed like a little fun project to tinker with.
 
-## Endpoints
+## UI 
+
+Navigate to the ip where you're hosting it and the specified port.
+
+## API Endpoints
 
 |Method | Path | Description |
 |-------|------|------------|
-| `GET` | /runners | get all runners |
-| `GET` | /runners/:id | get specific runner |
-| `DELETE` | /runners/:id | remove runner |
-| `POST` | /runners | create runner to ping URL |
-| `GET` | /results/:id | results of runner |
+| `GET` | /api/runners | get all runners |
+| `GET` | /api/runners/:id | get specific runner |
+| `DELETE` | /api/runners/:id | remove runner |
+| `POST` | /api/runners | create runner to ping URL |
+| `GET` | /api/results/:id | results of runner |
 | `GET` | /health-check | 200 OK if running |
 
 
@@ -32,7 +36,7 @@ A path needs to be pass along to the service when launching it. This path should
 # path to sqlite database, otherwise memory database will be used
 sqlite.path=/path/to/dbfile.db
 logback.path=/path/logback.xml
-# port to run service on
+# port to run service on, default 3000
 server.port=3000
 # user agent for runner
 runner.user-agent=
