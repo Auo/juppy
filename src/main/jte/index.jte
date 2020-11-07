@@ -6,6 +6,7 @@
     page = indexPage,
     content = @`
 
+    <h1>Runners</h1>
     <ul>
      @for(var runner : indexPage.runners)
         <li>
