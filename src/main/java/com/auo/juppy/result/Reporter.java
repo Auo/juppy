@@ -4,9 +4,20 @@ import com.auo.juppy.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.mail.*;
-import javax.mail.internet.*;
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import java.net.URI;
+import java.time.Instant;
 import java.util.Properties;
 
 public interface Reporter {
@@ -63,7 +74,9 @@ public interface Reporter {
                 message.setRecipients(Message.RecipientType.TO, to);
 
                 message.setSubject("Host unreachable.. 😭");
-                String msg = "Could not ping url: " + uri.toString();
+
+                String time = Instant.ofEpochMilli(result.timestamp * 1000).toString();
+                String msg = "Could not ping url: " + uri.toString() + ". Tried at: " + time;
 
                 MimeBodyPart mimeBodyPart = new MimeBodyPart();
                 mimeBodyPart.setContent(msg, "text/html");
